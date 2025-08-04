@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pro Typing Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4895ef;
+            --dark: #1b263b;
+            --light: #f8f9fa;
+            --success: #4cc9f0;
+            --error: #f72585;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f0f2f5;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .control-group {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .control-group h3 {
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        textarea, input, button {
+            font-family: 'Roboto Mono', monospace;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 100%;
+        }
+        
+        button {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s;
+        }
+        
+        button:hover {
+            background-color: var(--secondary);
+            transform: translateY(-2px);
+        }
+        
+        #timer {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 1rem 0;
+            color: var(--dark);
+        }
+        
+        #text-display {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            min-height: 150px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            white-space: pre-wrap;
+        }
+        
+        #text-input {
+            width: 100%;
+            min-height: 150px;
+            padding: 1rem;
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1.1rem;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            resize: vertical;
+            margin-bottom: 1.5rem;
+        }
+        
+        #text-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        .correct {
+            color: var(--success);
+            font-weight: bold;
+        }
+        
+        .incorrect {
+            color: var(--error);
+            text-decoration: underline;
+        }
+        
+        .current {
+            background-color: rgba(67, 97, 238, 0.2);
+            border-radius: 2px;
+        }
+        
+        .stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            flex: 1;
+            min-width: 120px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .stat h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        
+        .stat p {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 1rem;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            .control-group, .stat {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Pro Typing Test</h1>
+        <p>Test and improve your typing speed and accuracy</p>
+    </header>
+    
+    <div class="controls">
+        <div class="control-group">
+            <h3>Custom Text</h3>
+            <textarea id="custom-text" placeholder="Paste your own text here to practice..."></textarea>
+            <button id="use-custom">Use Custom Text</button>
+        </div>
+        <div class="control-group">
+            <h3>Sample Texts</h3>
+            <select id="sample-texts">
+                <option value="">Select a sample text...</option>
+                <option value="The quick brown fox jumps over the lazy dog. This classic pangram contains all letters of the alphabet.">Pangram</option>
+                <option value="To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortune, or to take arms against a sea of troubles and by opposing end them.">Shakespeare</option>
+                <option value="The history of all hitherto existing society is the history of class struggles. Freeman and slave, patrician and plebeian, lord and serf, guild-master and journeyman, in a word, oppressor and oppressed, stood in constant opposition to one another.">Marx</option>
+            </select>
+            <button id="use-sample">Use Selected Text</button>
+        </div>
+    </div>
+    
+    <div id="timer">00:00.000</div>
+    
+    <div class="stats">
+        <div class="stat">
+            <h3>WPM</h3>
+            <p id="live-wpm">0</p>
+        </div>
+        <div class="stat">
+            <h3>Accuracy</h3>
+            <p id="live-accuracy">0%</p>
+        </div>
+        <div class="stat">
+            <h3>Characters</h3>
+            <p id="live-chars">0/0</p>
+        </div>
+    </div>
+    
+    <div id="text-display">Select or paste text above to begin...</div>
+    
+    <textarea id="text-input" placeholder="Start typing here when the test begins..." disabled></textarea>
+    
+    <form id="results-form" method="post" action="{% url 'typing-test' %}" style="display: none;">
+        {% csrf_token %}
+        <input type="hidden" name="text" id="hidden-text">
+        <input type="hidden" name="typed_text" id="hidden-typed-text">
+        <input type="hidden" name="time_taken" id="hidden-time-taken">
+    </form>
+    
+    <footer>
+        <p>Typing Test App - Develop By Nahid Islam &copy; {% now "Y" %}</p>
+    </footer>
+    
+    <script>
+        const textDisplay = document.getElementById('text-display');
+        const textInput = document.getElementById('text-input');
+        const timerDisplay = document.getElementById('timer');
+        const customTextArea = document.getElementById('custom-text');
+        const sampleTexts = document.getElementById('sample-texts');
+        const useCustomBtn = document.getElementById('use-custom');
+        const useSampleBtn = document.getElementById('use-sample');
+        const liveWPM = document.getElementById('live-wpm');
+        const liveAccuracy = document.getElementById('live-accuracy');
+        const liveChars = document.getElementById('live-chars');
+        const hiddenText = document.getElementById('hidden-text');
+        const hiddenTypedText = document.getElementById('hidden-typed-text');
+        const hiddenTimeTaken = document.getElementById('hidden-time-taken');
+        const form = document.getElementById('results-form');
+        
+        let originalText = "";
+        let startTime;
+        let timerInterval;
+        let currentPosition = 0;
+        
+        // Set up custom text
+        useCustomBtn.addEventListener('click', () => {
+            if (customTextArea.value.trim()) {
+                startTest(customTextArea.value);
+            }
+        });
+        
+        // Set up sample text
+        useSampleBtn.addEventListener('click', () => {
+            if (sampleTexts.value) {
+                startTest(sampleTexts.value);
+            }
+        });
+        
+        function startTest(text) {
+            originalText = text;
+            hiddenText.value = originalText;
+            textDisplay.innerHTML = formatDisplayText(originalText, "");
+            textInput.value = "";
+            textInput.disabled = false;
+            textInput.focus();
+            currentPosition = 0;
+            startTime = null;
+            clearInterval(timerInterval);
+            timerDisplay.textContent = "00:00.000";
+            updateLiveStats();
+        }
+        
+        function formatDisplayText(fullText, typedText) {
+            let displayHTML = '';
+            
+            for (let i = 0; i < fullText.length; i++) {
+                let charClass = "";
+                
+                if (i < typedText.length) {
+                    charClass = typedText[i] === fullText[i] ? "correct" : "incorrect";
+                }
+                
+                if (i === typedText.length) {
+                    charClass += " current";
+                }
+                
+                displayHTML += `<span class="${charClass}">${fullText[i]}</span>`;
+            }
+            
+            return displayHTML;
+        }
+        
+        textInput.addEventListener('input', () => {
+            if (!startTime) {
+                startTime = new Date();
+                timerInterval = setInterval(updateTimer, 10);
+            }
+            
+            const typedText = textInput.value;
+            hiddenTypedText.value = typedText;
+            currentPosition = typedText.length;
+            
+            textDisplay.innerHTML = formatDisplayText(originalText, typedText);
+            updateLiveStats();
+            
+            // Scroll to current position
+            const currentSpan = document.querySelector('.current');
+            if (currentSpan) {
+                currentSpan.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // If all text is typed, submit the form
+            if (typedText.length === originalText.length) {
+                const endTime = new Date();
+                const timeTaken = (endTime - startTime) / 1000; // in seconds
+                hiddenTimeTaken.value = timeTaken;
+                clearInterval(timerInterval);
+                form.submit();
+            }
+        });
+        
+        function updateTimer() {
+            const currentTime = new Date();
+            const elapsed = new Date(currentTime - startTime);
+            const minutes = String(elapsed.getMinutes()).padStart(2, '0');
+            const seconds = String(elapsed.getSeconds()).padStart(2, '0');
+            const milliseconds = String(elapsed.getMilliseconds()).padStart(3, '0');
+            timerDisplay.textContent = `${minutes}:${seconds}.${milliseconds}`;
+            
+            // Update live WPM every second
+            if (elapsed.getMilliseconds() === 0) {
+                updateLiveStats();
+            }
+        }
+        
+        function updateLiveStats() {
+            const typedText = textInput.value;
+            
+            // Calculate live WPM
+            if (startTime) {
+                const timeElapsed = (new Date() - startTime) / 1000 / 60; // in minutes
+                const wordCount = typedText.length / 5;
+                const wpm = Math.round(wordCount / timeElapsed) || 0;
+                liveWPM.textContent = wpm;
+            }
+            
+            // Calculate live accuracy
+            if (typedText.length > 0) {
+                let correctChars = 0;
+                for (let i = 0; i < typedText.length; i++) {
+                    if (typedText[i] === originalText[i]) {
+                        correctChars++;
+                    }
+                }
+                const accuracy = Math.round((correctChars / typedText.length) * 100);
+                liveAccuracy.textContent = `${accuracy}%`;
+                liveChars.textContent = `${correctChars}/${originalText.length}`;
+            } else {
+                liveAccuracy.textContent = "0%";
+                liveChars.textContent = `0/${originalText.length}`;
+            }
+        }
+    </script>
+</body>
+</html>
